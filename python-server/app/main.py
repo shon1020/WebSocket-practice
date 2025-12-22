@@ -28,7 +28,7 @@ class ConnectionManager:
         }
         await websocket.send_json(data)
 
-    async def receive_text(self, websocket: WebSocket):
+    async def receive_text(self, websocket: WebSocket) -> str:
         data = await websocket.receive_text()
         return data
 
@@ -48,13 +48,14 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
     try:
         send_task = asyncio.create_task(send_messages_periodically(websocket))
         while True:
-            data = manager.receive_text(websocket)
+            data = await manager.receive_text(websocket)
             logger.info(f"クライアント{client_id}からメッセージを受け取りました: {data}")
     except WebSocketDisconnect:
         manager.disconnect(websocket)
         logger.warning(f"クライアント{client_id}が切断されました")
     except Exception as e:
         logger.error(f"予期しないエラーが発生しました: {e}")
+
     finally:
         send_task.cancel()
         await websocket.close()
