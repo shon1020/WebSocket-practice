@@ -4,5 +4,5 @@
 上記のサイトはフロントエンドでNext.jsを使用していますが、このレポジトリではreact+TypeScriptで書き換えています。
 
 # 技術スタック
-フロントエンドはreact+TypeScript+Vite使用し、バックエンドはFastAPIをフレームワークとして使用している。
+フロントエンドはreact+TypeScript+Vite使用し、バックエンドはFastAPIをフレームワークとして使用しています。
 
