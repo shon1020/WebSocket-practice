@@ -55,7 +55,6 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
         logger.warning(f"クライアント{client_id}が切断されました")
     except Exception as e:
         logger.error(f"予期しないエラーが発生しました: {e}")
-
     finally:
         send_task.cancel()
         await websocket.close()
