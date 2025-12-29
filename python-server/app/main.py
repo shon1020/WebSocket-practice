@@ -31,6 +31,10 @@ class ConnectionManager:
     async def receive_text(self, websocket: WebSocket) -> str:
         data = await websocket.receive_text()
         return data
+    
+    async def broadcast(self, message: str):
+        for connection in self.active_connections:
+            await connection.send_text(message)
 
 manager = ConnectionManager()
 
@@ -50,8 +54,10 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
         while True:
             data = await manager.receive_text(websocket)
             logger.info(f"クライアント{client_id}からメッセージを受け取りました: {data}")
+            await manager.broadcast(data)
     except WebSocketDisconnect:
         manager.disconnect(websocket)
+        await manager.broadcast(f"クライアント{client_id}が切断されました")
         logger.warning(f"クライアント{client_id}が切断されました")
     except Exception as e:
         logger.error(f"予期しないエラーが発生しました: {e}")
